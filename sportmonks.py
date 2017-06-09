@@ -14,14 +14,33 @@ def init(token):
     global api_token
     api_token = token
 
-def get(endpoint, include=''):
-    if include == '':
-        payload = {'api_token': api_token }
-    else:
-        payload = {'api_token': api_token, 'include': include}
+def get(endpoint, include=None, page=None, paginated=True):
+    payload = {'api_token': api_token }
+    if include:
+        payload['include'] = include
+    if page:
+        paginated = True
+        payload['page'] = page
     r = requests.get(api_url + endpoint, params=payload)
-    data = json.loads(r.text)
-    return data.get('data')
+    parts = json.loads(r.text)
+    data = parts.get('data')
+    meta = parts.get('meta')
+    if not data:
+        return None
+    pagination = meta.get('pagination')
+    if pagination:
+        pages = int(pagination['total_pages'])
+    else:
+        pages = 1
+    if (not paginated) and (pages > 1):
+        for i in range(2, pages+1):
+            payload['page'] = i
+            r = requests.get(api_url + endpoint, params=payload)
+            next_parts = json.loads(r.text)
+            next_data = next_parts.get('data')
+            if next_data:
+                data.extend(next_data)
+    return data
 
 def continents():
     """With this endpoint you are able to retrieve a list of continents."""
