@@ -74,12 +74,12 @@ def season(id):
     """With this endpoint you are able to retrieve a specific season."""
     return get('seasons/{}'.format(id))
 
-def fixtures(first, last=None):
+def fixtures(first, last=None, include=None, page=None, paginated=True):
     """With this endpoint you are able to retrieve all fixtures between 2 dates or retrieve all fixtures for a given date."""
     if last is None:
-        return get('fixtures/date/{}'.format(first))
+        return get('fixtures/date/{}/'.format(first), include, page, paginated)
     else:
-        return get('fixtures/between/{}/{}'.format(first, last))
+        return get('fixtures/between/{}/{}/'.format(first, last), include, page, paginated)
 
 def fixture(id):
     """With this endpoint you are able to retrieve a fixture by it's id. """
@@ -89,9 +89,9 @@ def todayscores():
     """With this endpoint you are able to retrieve all fixtures that are played on the current day."""
     return get('livescores')
 
-def livescores():
+def livescores(include=None, page=None, paginated=True):
     """With this endpoint you are able to retrieve all fixtures for are currently beeing played. This response will also contain games that are starting within 45 minutes and that are ended less then 30 minutes ago."""
-    return get('livescores/now')
+    return get('livescores/now', include, page, paginated)
 
 def standings(season):
     """With this endpoint you are able to retrieve the standings for a given season."""
