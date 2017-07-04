@@ -118,4 +118,4 @@ def round(id):
     return get('rounds/{}'.format(id))
 
 # Use cache
-requests_cache.install_cache('sportmonks_cache', backend='sqlite', expire_after=24*3600)
+#requests_cache.install_cache('sportmonks_cache', backend='sqlite', expire_after=24*3600)
